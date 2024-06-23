@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
 
 class ProfileController extends Controller
 {
@@ -18,19 +19,18 @@ class ProfileController extends Controller
             'age' => $age,
         ];
 
-        $cookieName = 'access_token';
-        $cookieValue = '123-XYZ';
+        $name = 'access_token';
+        $value = '123-XYZ';
         $minutes = 1;
         $path = '/';
         $domain = $_SERVER['SERVER_NAME'];
         $secure = false;
         $httpOnly = true;
 
-        $response = new Response(json_encode($data));
-        $response->header('Content-Type', 'application/json');
-        $response->withCookie(cookie($cookieName, $cookieValue, $minutes, $path, $domain, $secure, $httpOnly));
 
-        return $response;
+        $cookie = Cookie::make($name, $value, $minutes, $path, $domain, $secure, $httpOnly);
+
+        return response($data)->cookie($cookie)->setStatusCode(200);
     }
     
 }
